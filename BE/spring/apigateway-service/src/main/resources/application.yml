@@ -1,0 +1,83 @@
+server:
+  port: 8000
+  ssl:
+    enabled: true
+    key-store: classpath:keystore.p12
+    key-store-password: qnrwjrqnrwjr
+    key-store-type: PKCS12
+    key-alias: bns-ssl
+
+
+eureka:
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${server.port}}
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://j8b306.p.ssafy.io:8761/eureka #http://localhost:8761/eureka
+spring:
+  # profiles: default
+  application:
+    name: apigateway-service
+  cloud:
+    gateway:
+      httpclient:
+        ssl:
+          use-insecure-trust-manager: true
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins:
+              - "http://localhost:3000"
+              - "http://j8b306.p.ssafy.io:3000"
+              - "https://localhost:3000"
+              - "https://j8b306.p.ssafy.io:3000"
+              - "https://j8b306.p.ssafy.io"
+            allow-credentials: true   #추가
+            allowedHeaders:
+              - x-requested-with
+              - authorization
+              - content-type
+              - credential
+              - X-AUTH-TOKEN
+              - X-CSRF-TOKEN
+              - x-forwarded-for-user-id
+
+            allowedMethods:
+              - POST
+              - GET
+              - PUT
+              - OPTIONS
+              - DELETE
+
+      routes:
+        - id: booklet-user-service
+          uri: lb://USER-SERVICE # user-service의 namef
+          predicates:
+            - Path=/api/v1/auth/**, /api/v1/user/**
+#          filters:
+#            - CustomFilter
+        - id: booklet-paragraph-service
+          uri: lb://PARAGRAPH-SERVICE # paragraph-service의 name
+          predicates:
+            - Path=/api/v1/sns/**, /api/v1/comment/**
+
+#          filters:
+#            - CustomFilter
+        - id: booklet-book-service
+          uri: lb://BOOK-SERVICE # book-service의 name
+          predicates:
+            - Path=/api/v1/book/**, /api/v1/review/**
+#          filters:
+#            - CustomFilter
+        - id: booklet-recommand-service
+          uri: lb://RECOM-SERVICE # recom-service의 name
+          predicates:
+            - Path=/api/v1/recom/**
+#          filters:
+#            - CustomFilter
+

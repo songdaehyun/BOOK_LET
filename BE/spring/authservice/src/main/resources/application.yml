@@ -1,0 +1,50 @@
+server:
+#  port: 9999
+  port: 0
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+#    register-with-eureka: false
+#    fetch-registry: false
+    service-url:
+      defaultZone: http://j8b306.p.ssafy.io:8761/eureka  # http://localhost:8761/eureka #
+
+
+cloud:
+  aws:
+    s3:
+      bucket: {bucket name}
+    stack.auto: false
+    region.static: ap-northeast-2
+    credentials:
+      accessKey: {s3-accessKey}
+      secretKey: {s3-secretKey}
+spring:
+  application:
+    name: user-service
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        format_sql: true
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://j8b306.p.ssafy.io:3306/booklet_db?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: booklet
+    password: {mySql-password}
+  # swagger
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  redis:
+    host: localhost # 3.38.106.18
+    port: 6379
+    password: {redis-password}

@@ -1,0 +1,59 @@
+import React, { useState, useEffect } from "react";
+
+import BookListTemplates from "../../templates/Book/BookListTemplates";
+
+import BannerImg from "../../../assets/images/Banner/cover-recom-book-banner.png";
+import { getCoverBookRecom } from "../../../apis/BookApi";
+import { initBookRecom } from "../../../apis/init/initBook";
+import useAsync from "../../../hooks/useAsync";
+
+function CoverRecomBook(props) {
+	const uName = localStorage.getItem("userName");
+
+	const [state] = useAsync(getCoverBookRecom, uName, initBookRecom, []);
+	const { loading, data: recom, error } = state;
+
+	const bannerInfo = {
+		title: (
+			<>
+				좋아하실만한 표지의
+				<br /> 책이에요
+			</>
+		),
+		subTitle: (
+			<>
+				선호하시는 스타일의 표지를 위주로
+				<br />
+				도서를 추천해드려요.
+			</>
+		),
+		img: BannerImg,
+	};
+
+	const emptyInfo = {
+		title: `아직 관련 내역이 없어요`,
+		subTitle: (
+			<>
+				좋아요와 리뷰를 남겨주시면
+				<br /> 마음에 들 추천을 해드릴게요
+			</>
+		),
+		buttonLabel: "책 탐색하러 가기",
+		path: "/book/search",
+	};
+
+	return (
+		<BookListTemplates
+			title={bannerInfo.title}
+			subTitle={bannerInfo.subTitle}
+			img={bannerInfo.img}
+			type={recom?.type}
+			books={recom?.books}
+			emptyInfo={emptyInfo}
+			loading={loading}
+			error={error}
+		/>
+	);
+}
+
+export default CoverRecomBook;
