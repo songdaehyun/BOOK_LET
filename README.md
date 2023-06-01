@@ -114,7 +114,7 @@
 ```
 - 기존 SSIM 모델, yolo 5 등 정밀한 추천을 기획하였으나, 성능측면이 상당히 저하되어, 유저 편익에 해를 가하게 되었고, 이에 따라 keras를 도입하는 등 성능 측면을 향상시켰습니다.
 
-- [기본 추천 시스템](Recomend.md)
+- [기본 추천 시스템](BE/django/recommend-service/README.md)
     - 협업필터링 with KNN
     - 컨텐츠 기반 필터링 with TF-IDF
 
